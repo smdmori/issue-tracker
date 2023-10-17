@@ -2,7 +2,7 @@
 
 import ErrorMessage from '@/app/components/ErrorMessage';
 import Spinner from '@/app/components/Spinner';
-import { createIssueSchema } from '@/app/validationSchema';
+import { issueSchema } from '@/app/validationSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Issue } from '@prisma/client';
 import { Button, Callout, TextField } from '@radix-ui/themes';
@@ -15,7 +15,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { BiErrorAlt } from 'react-icons/bi';
 import z from 'zod';
 
-type IssueFormData = z.infer<typeof createIssueSchema>;
+type IssueFormData = z.infer<typeof issueSchema>;
 
 const SimpleMDE = dynamic(
   () => import('react-simplemde-editor'),
@@ -29,7 +29,7 @@ interface Props {
 const IssueForm = ({ issue }: Props) => {
   const router = useRouter()
   const { register, control, handleSubmit, formState: { errors } } = useForm<IssueFormData>({
-    resolver: zodResolver(createIssueSchema)
+    resolver: zodResolver(issueSchema)
   })
   const [error, setError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
