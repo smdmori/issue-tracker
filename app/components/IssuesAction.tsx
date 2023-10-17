@@ -3,7 +3,11 @@ import Link from 'next/link'
 
 const IssuesAction = () => {
   return (
-    <Button><Link href={'/issues/new'}>New Issue</Link></Button>
+    <Link href={'/issues/new'}>
+      <Button>
+        New Issue
+      </Button>
+    </Link>
   )
 }
 
