@@ -1,6 +1,7 @@
 import prisma from "@/prisma/client"
 import { Table } from "@radix-ui/themes"
-import { IssueStatusBadge, IssuesAction, Link } from "../../components"
+import { IssueStatusBadge, Link } from "../../components"
+import IssueActions from "./IssueActions"
 
 const IssuesPage = async () => {
 
@@ -8,7 +9,7 @@ const IssuesPage = async () => {
 
   return (
     <div>
-      <IssuesAction />
+      <IssueActions />
       <Table.Root variant="surface" className="mt-5">
         <Table.Header>
           <Table.Row>
