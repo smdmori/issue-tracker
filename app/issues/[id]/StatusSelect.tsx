@@ -28,6 +28,7 @@ const StatusSelect = ({ issue }: { issue: Issue }) => {
   return (
     <>
       <Select.Root
+        value={issue.status}
         onValueChange={changeStatus}
       >
         <Select.Trigger placeholder="Change Status..." />

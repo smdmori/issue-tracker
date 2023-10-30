@@ -5,9 +5,11 @@ import { Issue, User } from '@prisma/client'
 import { Select } from '@radix-ui/themes'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
+import { useRouter } from 'next/navigation'
 import toast, { Toaster } from 'react-hot-toast'
 
 const AssigneeSelect = ({ issue }: { issue: Issue }) => {
+  const router = useRouter()
   const { data: users, error, isLoading } = useUsers()
 
   if (isLoading) return <Skeleton height={'2rem'} />
@@ -15,7 +17,8 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
 
   const assignIssue = async (userId: string) => {
     try {
-      await axios.patch('/api/issues/' + issue.id, { assignedToUserId: userId || null })
+      await axios.patch('/api/issues/' + issue.id, { assignedToUserId: userId || null, status: userId ? 'IN_PROGRESS' : issue.status })
+      router.refresh()
     } catch (error) {
       toast.error('Changes could not be saved')
     }
