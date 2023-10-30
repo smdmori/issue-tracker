@@ -9,6 +9,7 @@ import { Metadata } from "next"
 export interface IssueQuery {
   status: Status
   orderBy: keyof Issue
+  sortOrder: 'asc' | 'desc'
   page: string
 }
 
@@ -21,7 +22,7 @@ const IssuesPage = async ({ searchParams }: Props) => {
   const status = statuses.includes(searchParams.status) ? searchParams.status : undefined
   const orderBy = columnNames
     .includes(searchParams.orderBy)
-    ? { [searchParams.orderBy]: 'asc' }
+    ? { [searchParams.orderBy]: searchParams.sortOrder }
     : undefined
   const where = { status }
 
@@ -43,7 +44,8 @@ const IssuesPage = async ({ searchParams }: Props) => {
       <IssueTable searchParams={{
         status: searchParams.status,
         orderBy: searchParams.orderBy,
-        page: page.toString()
+        sortOrder: searchParams.sortOrder,
+        page: page.toString(),
       }} issues={issues} />
       <Pagination itemCount={issueCount} pageSize={pageSize} currentPage={page} />
     </Flex>

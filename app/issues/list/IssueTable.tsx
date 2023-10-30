@@ -1,9 +1,9 @@
 import { Issue } from "@prisma/client"
-import { ArrowUpIcon } from "@radix-ui/react-icons"
-import { Table } from "@radix-ui/themes"
+import { Flex, Table } from "@radix-ui/themes"
 import NextLink from "next/link"
 import { IssueStatusBadge, Link } from "../../components"
 import { IssueQuery } from "./page"
+import { BiCaretDown, BiCaretUp } from "react-icons/bi"
 
 interface Props {
   searchParams: IssueQuery,
@@ -20,13 +20,37 @@ const IssueTable = ({ searchParams, issues }: Props) => {
               key={column.value}
               className={column.className}
             >
-              <NextLink href={{
-                query: { ...searchParams, orderBy: column.value }
-              }}
-              >
-                {column.label}
-              </NextLink>
-              {column.value === searchParams.orderBy && <ArrowUpIcon className="inline" />}
+              <Flex align={"center"} gap={"2"} className="h-[inherit]">
+                <NextLink
+                  href={{
+                    query: { ...searchParams, orderBy: column.value, sortOrder: 'asc' }
+                  }}
+                >
+                  {column.label}
+                </NextLink>
+                {searchParams.orderBy === column.value ? (
+                  <Flex direction={'column'}>
+                    <NextLink href={{
+                      query: { ...searchParams, orderBy: column.value, sortOrder: 'asc' }
+                    }}><BiCaretUp className={`inline ${searchParams.sortOrder === 'asc' ? 'text-gray-800' : 'text-gray-400'}`} /></NextLink>
+                    <NextLink href={{
+                      query: { ...searchParams, orderBy: column.value, sortOrder: 'desc' }
+                    }}><BiCaretDown className={`inline ${searchParams.sortOrder === 'desc' ? 'text-gray-800' : 'text-gray-400'}`} /></NextLink>
+                  </Flex>
+                ) :
+                  searchParams.orderBy === undefined &&
+                  column.value === 'createdAt' && (
+                    <Flex direction={'column'}>
+                      <NextLink href={{
+                        query: { ...searchParams, orderBy: column.value, sortOrder: 'asc' }
+                      }}><BiCaretUp className={'inline text-gray-800'} /></NextLink>
+                      <NextLink href={{
+                        query: { ...searchParams, orderBy: column.value, sortOrder: 'desc' }
+                      }}><BiCaretDown className={`inline ${searchParams.sortOrder === 'desc' ? 'text-gray-800' : 'text-gray-400'}`} /></NextLink>
+                    </Flex>
+                  )
+                }
+              </Flex>
             </Table.ColumnHeaderCell>
           ))}
         </Table.Row>
