@@ -11,6 +11,7 @@ export interface IssueQuery {
   orderBy: keyof Issue
   sortOrder: 'asc' | 'desc'
   pageSize: string
+  userId: string
   page: string
 }
 
@@ -36,20 +37,37 @@ const IssuesPage = async ({ searchParams }: Props) => {
     skip: (page - 1) * pageSize,
     take: pageSize
   })
-
   const issueCount = await prisma.issue.count({ where })
+
+  const assignedIssues = await prisma.issue.findMany({
+    where: {
+      assignedToUserId: searchParams.userId,
+      status: searchParams.status
+    },
+    include: { assignedToUser: true },
+    take: pageSize,
+    skip: (page - 1) * pageSize
+  })
+  const assignedIssuesCount = await prisma.issue.count({
+    where: {
+      assignedToUserId: searchParams.userId,
+      status: searchParams.status
+    }
+  })
 
   return (
     <Flex direction={"column"} gap={"3"}>
       <IssueActions />
+      <Pagination itemCount={searchParams.userId ? assignedIssuesCount : issueCount} pageSize={pageSize} currentPage={page} />
       <IssueTable searchParams={{
         status: searchParams.status,
         orderBy: searchParams.orderBy,
         sortOrder: searchParams.sortOrder,
         pageSize: searchParams.pageSize,
+        userId: searchParams.userId,
         page: page.toString(),
-      }} issues={issues} />
-      <Pagination itemCount={issueCount} pageSize={pageSize} currentPage={page} />
+      }} issues={issues} assignedIssues={assignedIssues} />
+      <Pagination itemCount={searchParams.userId ? assignedIssuesCount : issueCount} pageSize={pageSize} currentPage={page} />
     </Flex>
   )
 }

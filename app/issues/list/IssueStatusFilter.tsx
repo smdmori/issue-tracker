@@ -24,6 +24,7 @@ const IssueStatusFilter = () => {
         const params = new URLSearchParams(searchParams)
         if (status) params.set('status', status)
         else params.delete('status')
+        params.delete('page')
 
         const query = params.size ? '?' + params.toString() : ''
         router.push('/issues/list' + query)
