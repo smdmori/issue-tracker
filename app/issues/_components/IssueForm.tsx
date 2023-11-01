@@ -66,6 +66,10 @@ const IssueForm = ({ issue }: Props) => {
           render={({ field }) => <SimpleMDE placeholder='Description' {...field} />}
         />
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
+        <TextField.Root>
+          <TextField.Input placeholder='Write some comments...' {...register('comment')} />
+        </TextField.Root>
+        <ErrorMessage>{errors.comment?.message}</ErrorMessage>
         <Button disabled={isSubmitting}>{issue ? 'Update Issue' : 'Submit New Issue'} {isSubmitting && <Spinner />}</Button>
       </form>
     </div>

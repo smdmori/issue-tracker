@@ -44,6 +44,25 @@ export async function PATCH(
     },
   });
 
+  const user = await prisma.user.findUnique({
+    where: {
+      email: session.user?.email as string,
+    },
+  });
+
+  if (body.comment) {
+    const newComment = await prisma.comment.create({
+      data: {
+        text: body.comment,
+        issueId: updatedIssue.id,
+        userEmail: session.user?.email,
+        userId: user?.id,
+      },
+    });
+
+    return NextResponse.json([updatedIssue, newComment]);
+  }
+
   return NextResponse.json(updatedIssue);
 }
 

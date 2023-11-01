@@ -1,14 +1,18 @@
-import { Issue } from "@prisma/client"
+import { Issue, User } from "@prisma/client"
 import { Avatar, Flex, Table, Text } from "@radix-ui/themes"
 import NextLink from "next/link"
 import { BiCaretDown, BiCaretUp } from "react-icons/bi"
 import { IssueStatusBadge, Link } from "../../components"
 import { IssueQuery } from "./page"
 
+interface AssignedIssues extends Issue {
+  assignedToUser: User | null
+}
+
 interface Props {
   searchParams: IssueQuery,
   issues: Issue[],
-  assignedIssues: Issue[]
+  assignedIssues: AssignedIssues[]
 }
 
 const IssueTable = async ({ searchParams, issues, assignedIssues }: Props) => {
@@ -81,7 +85,7 @@ const IssueTable = async ({ searchParams, issues, assignedIssues }: Props) => {
 }
 
 // TODO: use typescript to clean up this mess
-function table(issue, allIssues) {
+function table(issue: Issue, allIssues: AssignedIssues[]) {
   return (
     <Table.Row key={issue.id} align={"center"}>
       <Table.Cell>
